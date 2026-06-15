@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "-//freedesktop//DTD IBus Component 1.0//EN" "http://ibus.googlecode.com/svn/trunk/data/dtd/ibus-component.dtd">
+<component>
+    <name>org.avro.bangla</name>
+    <description>Avro Bangla Phonetic Input Method</description>
+    <version>1.0.0</version>
+    <license>MIT</license>
+    <author>Avro Bangla Contributors</author>
+    <homepage>https://github.com/avro-bangla/ibus</homepage>
+    <textdomain>ibus-avro-bangla</textdomain>
+    <icon>/usr/local/share/icons/hicolor/48x48/apps/ibus-engine.png</icon>
+    <hotkeys>&lt;Super&gt;space</hotkeys>
+    <engines>
+        <engine>
+            <name>AvroBangla</name>
+            <longname>Avro Bangla Phonetic</longname>
+            <description>Bangla phonetic input method based on Avro</description>
+            <language>bn</language>
+            <license>MIT</license>
+            <author>Avro Bangla Contributors</author>
+            <icon>/usr/local/share/icons/hicolor/48x48/apps/ibus-engine.png</icon>
+            <layout>us</layout>
+            <rank>50</rank>
+            <hotkeys>&lt;Super&gt;space</hotkeys>
+            <symbol>অ</symbol>
+            <!-- Setup is optional; removed reference to non-existent setup script -->
+        </engine>
+    </engines>
+    <command>/usr/local/bin/avro-bangla-ibus --ibus ${IBUS_ADDRESS}</command>
+</component>
