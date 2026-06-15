@@ -1,5 +1,26 @@
 package main
 
+// Pattern represents a phonetic conversion rule
+type Pattern struct {
+	Find    string
+	Replace string
+	Rules   []Rule
+}
+
+// Rule represents a conditional rule for pattern matching
+type Rule struct {
+	Matches []Match
+	Replace string
+}
+
+// Match defines a condition for rule evaluation
+type Match struct {
+	Type     string // "prefix" or "suffix"
+	Scope    string // "vowel", "consonant", "punctuation", "exact"
+	Value    string // for exact matches
+	Negative bool   // if true, condition must NOT match
+}
+
 // AvroPatterns contains all phonetic conversion rules
 var AvroPatterns = []Pattern{
 	{Find: "bhl", Replace: "ভ্ল"},

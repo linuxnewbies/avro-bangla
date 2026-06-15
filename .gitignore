@@ -1,0 +1,39 @@
+```
+# Go build artifacts
+*.o
+*.a
+*.out
+*.test
+
+# Go cache directories
+go/pkg/mod/
+go/build/cache/
+
+# Dependencies
+vendor/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Build artifacts from other tools
+dist/
+build/
+target/
+```
