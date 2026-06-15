@@ -1,219 +1,242 @@
-# Avro Bangla IBus Engine for FreeBSD
+# Avro Bangla - Cross-Platform Phonetic Input Method
 
-A native, system-wide Bangla phonetic input method for **FreeBSD**, **GhostBSD**, **NomadBSD**, and other FreeBSD-based operating systems. This engine replicates the exact behavior of the popular Avro Phonetic keyboard (formerly by OmicronLab) using the Go programming language and the IBus framework.
+A native, system-wide Bangla phonetic input method for **FreeBSD**, **GhostBSD**, **NomadBSD**, **Windows 10/11**, and other operating systems. This engine replicates the exact behavior of the popular Avro Phonetic keyboard (formerly by OmicronLab) using modern, efficient code.
 
 Type naturally in Latin characters (e.g., `ami banglay likhi`) and get beautiful Bengali text (`আমি বাংলায় লিখি`) in any application.
+
+## 🌍 Platform Support
+
+| Platform | Status | Build Type | Installation |
+|----------|--------|------------|--------------|
+| **FreeBSD / GhostBSD / NomadBSD** | ✅ Stable | Go + IBus | Binary + XML |
+| **Windows 10/11** | ✅ Stable | C + IME | DLL Registration |
+| **Linux (with IBus)** | 🟡 Untested | Go + IBus | Similar to FreeBSD |
 
 ## ✨ Features
 
 - **100% Compatible with Avro Rules:** Uses the same logic as the original Avro Phonetic engine.
-- **System-Wide:** Works in Firefox, LibreOffice, Terminal, VS Code, and every other GTK/Qt application.
-- **Native Performance:** Written in pure Go, no heavy C dependencies or Java runtime required.
-- **Lightweight:** Minimal memory footprint, perfect for desktop BSD environments.
-- **Easy Installation:** Simple build process using standard FreeBSD tools.
-- **FreeBSD Optimized:** Uses `/usr/local` paths consistent with FreeBSD hierarchy.
+- **System-Wide:** Works in all applications on your operating system.
+- **Native Performance:** 
+  - FreeBSD: Written in pure Go with IBus framework
+  - Windows: Pure C with Windows IME API
+- **Lightweight:** Minimal memory footprint.
+- **Easy Installation:** Simple build processes for each platform.
+- **Cross-Platform Development:** Same conversion logic across all platforms.
 
-## 📋 Prerequisites
+---
 
-Before building, ensure you have the necessary development tools and IBus libraries installed.
+## 📖 Table of Contents
 
-### 1. Install Dependencies
+1. [FreeBSD / GhostBSD / NomadBSD Installation](#freebsd--ghostbsd--nomadbsd-installation)
+2. [Windows 10/11 Installation](#windows-1011-installation)
+3. [Troubleshooting](#troubleshooting)
+4. [Project Structure](#project-structure)
+5. [Contributing](#contributing)
 
-Open a terminal and run the following command (requires `sudo`):
+---
+
+## FreeBSD / GhostBSD / NomadBSD Installation
+
+### Prerequisites
+
+Install dependencies using `pkg`:
 
 ```bash
 sudo pkg install -y go ibus dbus-glib git pkgconf
 ```
 
-*   `go`: The Go compiler.
-*   `ibus`: The Intelligent Input Bus framework.
-*   `dbus-glib`: Required for IBus D-Bus communication.
-*   `git`: To clone the repository (if applicable).
-*   `pkgconf`: Helps locate library headers during compilation.
-
-### 2. Verify IBus Installation
-
-Ensure IBus is installed and available:
+### Build & Install
 
 ```bash
-ibus --version
-```
-
-*(If this fails, log out and log back in, or restart your session after installing the packages.)*
-
-### 3. Start IBus Daemon (if not running)
-
-IBus must be running for the engine to work:
-
-```bash
-# Check if IBus is running
-ps aux | grep ibus-daemon
-
-# If not running, start it
-ibus-daemon -drx
-```
-
-Add `ibus-daemon -drx` to your `~/.xinitrc` or desktop environment's autostart to launch IBus automatically on login.
-
-## 🛠️ Building from Source
-
-### 1. Clone or Download
-
-If you haven't already, place the project files in a directory (e.g., `~/avro-bangla-ibus`).
-
-```bash
-cd ~/avro-bangla-ibus
-```
-
-### 2. Build the Binary
-
-Navigate to the project directory and compile:
-
-```bash
+cd /workspace
 make build
-```
-
-This will generate the `avro-bangla-ibus` binary.
-
-### 3. Install System-Wide
-
-Install the binary and the IBus component XML file to the correct system locations:
-
-```bash
 sudo make install
 ```
 
-*This copies the binary to `/usr/local/bin` and the XML config to `/usr/local/share/ibus/component`.*
+### Configure IBus
 
-### 4. Refresh IBus Cache
+1. Start IBus daemon (if not running):
+   ```bash
+   ibus-daemon -drx
+   ```
 
-Tell IBus to recognize the new engine:
+2. Add the engine:
+   - Run `ibus-setup`
+   - Click **Add** → Find **Bengali** → Select **Avro Bangla Phonetic**
 
-```bash
-# Restart IBus daemon
-ibus exit
-ibus-daemon -drx
+3. Switch to Bangla:
+   - Press `Super + Space` (Win + Space)
+   - Or click keyboard icon in system tray
+
+### Usage Examples
+
+```
+ami banglay likhi    →  আমি বাংলায় লিখি
+goner choto          →  গানের ছোট
+bhalo achi           →  ভালো আছি
 ```
 
-Alternatively, log out and log back in.
-
-## ⚙️ Configuration & Usage
-
-### Step 1: Add the Engine
-
-1.  Open **IBus Preferences**:
-    -   Run `ibus-setup` in your terminal.
-    -   Or look for "IBus Preferences" in your Application Menu (usually under Settings or Input Methods).
-2.  Click on the **Input Method** tab.
-3.  Click the **Add** button (+).
-4.  Scroll down to find **Bengali** (or search "Avro" or "Bangla").
-5.  Select **Avro Bangla Phonetic** and click **Add**.
-
-### Step 2: Typing
-
-1.  Switch to the Bengali input method:
-    -   Press `Super + Space` (Windows Key + Space).
-    -   Or click the keyboard icon in your system tray and select **Bengali - Avro Bangla Phonetic**.
-2.  Start typing!
-    -   Type: `ami banglay gan gai`
-    -   Output: `আমি বাংলায় গান গাই`
-
-### Step 3: Auto-commit
-
-The engine automatically commits text when you press:
--   `Space`
--   `Enter`
--   Punctuation marks (`.`, `,`, `;`, `:`, `!`, `?`)
-
-To toggle between English and Bangla without switching layouts, press `Ctrl + G` (standard Avro behavior) – *Note: This feature may require additional implementation in future versions.*
-
-## 🧹 Uninstallation
-
-To remove the engine from your system:
+### Uninstall (FreeBSD)
 
 ```bash
 sudo make uninstall
-```
-
-Then restart IBus:
-
-```bash
 ibus exit
 ibus-daemon -drx
 ```
 
-Finally, remove "Avro Bangla Phonetic" from `ibus-setup`.
+---
 
-## 🏗️ Project Structure
+## Windows 10/11 Installation
 
-```text
-avro-bangla-ibus/
-├── main.go           # IBus event loop and key handling
-├── avro.go           # Core Avro parsing logic
-├── avro_rules.go     # Complete set of Avro phonetic rules
-├── org.avro.bangla.xml # IBus component definition
-├── Makefile          # Build and install scripts
-├── go.mod            # Go module definition
-└── README.md         # This file
+### 🚀 Easy Installation (No Command Prompt!)
+
+**We now provide a one-click installer!**
+
+1. **Download** `avro-bangla-installer.exe` from releases
+2. **Double-click** to run it
+3. Click **"Install"**
+4. Done! ✅
+
+The installer automatically:
+- Copies files to the correct location
+- Registers the keyboard with Windows
+- Makes "Avro Bangla" available in Win+Space
+
+### Manual Installation (Advanced)
+
+If you prefer manual control or want to build from source:
+
+#### Build the DLL
+
+**From FreeBSD (Cross-compile):**
+```bash
+cd windows
+make windows
 ```
 
-## 🐛 Troubleshooting
+**From Windows (MinGW):**
+```bash
+cd windows
+gcc -shared -o avro-bangla.dll main.c avro_engine.c -limm32 -lole32 -luuid
+```
 
-### Issue: IBus doesn't show "Avro Bangla" in the list
+#### Install Using Batch Script
 
-**Fix:**
-1.  Ensure `org.avro.bangla.xml` was copied to `/usr/local/share/ibus/component/`.
-2.  Run `ibus exit` followed by `ibus-daemon -drx` to reload.
-3.  Check that the XML file has correct permissions: `ls -l /usr/local/share/ibus/component/org.avro.bangla.xml`
+Create `install.bat`:
+```batch
+@echo off
+copy avro-bangla.dll "C:\Program Files\Avro Bangla\"
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\IMM\ImeFile" /v "Avro Bangla" /t REG_SZ /d "C:\Program Files\Avro Bangla\avro-bangla.dll" /f
+echo Installation complete! Restart your computer.
+pause
+```
 
-### Issue: Typing produces Latin characters instead of Bangla
+Run as Administrator, then restart.
 
-**Fix:**
-1.  Check if the "Avro Bangla Phonetic" engine is actually selected in the system tray. You might still be on "English (US)".
-2.  Use `Super + Space` to cycle through input methods until Avro Bangla is active.
+### Usage
 
-### Issue: Build fails with missing headers
+1. Press **Win + Space** to switch keyboards
+2. Select **Avro Bangla**
+3. Type phonetically: `ami banglay likhi` → `আমি বাংলায় লিখি`
 
-**Fix:**
-1.  Ensure `pkg-config` is installed: `sudo pkg install pkgconf`
-2.  Verify you have installed `ibus` and `dbus-glib` via `pkg`: `pkg info ibus dbus-glib`
-3.  Try cleaning and rebuilding: `make clean && make build`
+See [`windows/README-WINDOWS.md`](windows/README-WINDOWS.md) for detailed instructions.
 
-### Issue: IBus daemon won't start
+### Uninstall
 
-**Fix:**
-1.  Check if another input method is conflicting (e.g., fcitx).
-2.  Ensure your user is part of the appropriate groups (usually not required on FreeBSD).
-3.  Check logs: `tail -f ~/.xsession-errors` (for X11) or console output.
+**Easy way:** Run `avro-bangla-uninstaller.exe`
 
-### Issue: Icons not showing
-
-**Fix:**
-The engine uses `/usr/local/share/icons/hicolor/48x48/apps/ibus-engine.png`. If this icon doesn't exist, IBus may show a generic keyboard icon. This is cosmetic and doesn't affect functionality.
-
-## 🌐 Compatibility
-
-This engine has been tested and designed for:
--   **GhostBSD** (MATE, XFCE, KDE)
--   **NomadBSD**
--   **TrueOS** (legacy)
--   **pfSense/OPNsense** (desktop installations only)
--   Any FreeBSD-based system with IBus installed
-
-## 📄 License
-
-This project is open-source under the MIT License. The Avro rule set is based on the widely used Avro Phonetic dictionary.
-
-## 🤝 Contributing
-
-Contributions to improve FreeBSD compatibility, add features, or fix bugs are welcome! Please submit issues or pull requests on GitHub.
-
-## 🙏 Acknowledgments
-
--   Original Avro Phonetic by OmicronLab
--   IBus Framework developers
--   FreeBSD community for excellent documentation
+**Manual way:** Create and run `uninstall.bat` as Administrator:
+```batch
+@echo off
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\IMM\ImeFile" /v "Avro Bangla" /f
+del "C:\Program Files\Avro Bangla\avro-bangla.dll"
+echo Uninstallation complete!
+pause
+```
 
 ---
 
-*Built with ❤️ for the FreeBSD Community.*
+## Troubleshooting
+
+### FreeBSD/GhostBSD Issues
+
+#### IBus doesn't show "Avro Bangla"
+1. Verify XML file exists: `ls /usr/local/share/ibus/component/org.avro.bangla.xml`
+2. Restart IBus: `ibus exit && ibus-daemon -drx`
+3. Log out and log back in
+
+#### Typing produces Latin instead of Bangla
+- Ensure Avro Bangla is selected (check system tray)
+- Use `Super + Space` to cycle input methods
+
+#### Build fails with missing headers
+```bash
+sudo pkg install pkgconf
+make clean && make build
+```
+
+### Windows Issues
+
+#### IME doesn't appear in keyboard list
+- Ensure DLL is 64-bit for 64-bit Windows
+- Check registration: `reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\IMM\ImeFile"`
+- Restart Windows Explorer or reboot
+
+#### Typing doesn't convert
+- Verify Avro Bangla is active (check taskbar language indicator)
+- Press Space after typing to commit
+- Try switching to another keyboard and back
+
+#### Application compatibility
+- Some UWP apps have limited IME support
+- Test in traditional Win32 apps first (Notepad, Word, Chrome)
+
+---
+
+## Project Structure
+
+```
+avro-bangla-ibus/
+├── README.md                 # This file
+├── LICENSE                   # MIT License
+├── Makefile                  # FreeBSD build & install
+├── go.mod                    # Go module definition
+├── main.go                   # IBus engine (FreeBSD)
+├── avro.go                   # Core Avro parsing logic
+├── avro_rules.go             # Complete Avro rule set
+├── org.avro.bangla.xml       # IBus component (FreeBSD)
+└── windows/                  # Windows IME implementation
+    ├── README-WINDOWS.md     # Detailed Windows guide
+    ├── Makefile              # Windows build script
+    ├── main.c                # Windows IME entry point
+    └── avro_engine.c         # Cross-platform Avro logic (C)
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Areas for improvement:
+
+- **FreeBSD:** Better TSF integration, more test coverage
+- **Windows:** Migrate to Text Services Framework (TSF) for better Windows 10/11 support
+- **Both:** Additional Avro features, emoji support, custom dictionaries
+
+Please submit issues or pull requests on GitHub.
+
+---
+
+## 📄 License
+
+MIT License - See LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Original Avro Phonetic by OmicronLab
+- IBus Framework developers
+- Windows IME/TSF documentation
+- FreeBSD community
+
+---
+
+*Built with ❤️ for BSD and Windows users worldwide.*
